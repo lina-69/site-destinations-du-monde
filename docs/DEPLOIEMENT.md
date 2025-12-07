@@ -89,6 +89,7 @@ pip install -r TON_REPO/requirements.txt
 ```
 
 # 5. Configurer les settings de production
+## 5.1 Configuration générale
 
 Dans **Files → TON_REPO → TON_PROJET → settings**, vous devez avoir :
 
@@ -134,6 +135,92 @@ except ImportError:
 
 Remplacer **USERNAME** par votre nom PythonAnywhere.
 
+## **5.2 Configurer l’envoi d’emails en production (Gmail)**
+
+Si votre page **Contact** envoie un email en local, vous devez reproduire la configuration en **production** sur PythonAnywhere.
+
+Pour cela, deux étapes sont nécessaires et complémentaires :
+➡️ **Étape 1 : configurer `production.py`**
+➡️ **Étape 2 : définir les variables d’environnement sur PythonAnywhere**
+
+
+### **Étape 1 — Ajouter la configuration email dans `production.py`**
+
+Dans `TON_PROJET/settings/production.py`, ajoutez en haut :
+
+```python
+import os
+```
+
+Puis ajoutez la configuration email :
+
+```python
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+```
+
+Cette configuration indique à Django d'utiliser Gmail et de récupérer les identifiants depuis les variables d’environnement du serveur.
+
+### **Étape 2 — Définir les variables d’environnement dans PythonAnywhere**
+
+1. Aller dans **Web → Environment variables**
+2. Ajouter les deux variables suivantes :
+
+```
+EMAIL_HOST_USER=ton_email@gmail.com
+EMAIL_HOST_PASSWORD=TON_MDP_APPLICATION_GMAIL
+```
+
+➡️ Remplacez par votre adresse Gmail et *votre mot de passe d’application Gmail*.
+➡️ Ne jamais mettre d’espaces avant ou après le `=`.
+
+3. Enregistrer puis cliquer sur **Reload** de la Web App.
+
+### ⚠️ **Points importants**
+
+#### 1️⃣ Utilisez obligatoirement un **mot de passe d’application Gmail**
+
+Ce n’est pas votre mot de passe habituel.
+Il faut le créer dans :
+**Google → Sécurité → Mots de passe d’application**
+
+#### 2️⃣ Ne jamais écrire un mot de passe directement dans le code
+
+Toujours utiliser :
+
+```python
+os.environ.get("EMAIL_HOST_PASSWORD")
+```
+
+#### 3️⃣ Vérifier que la configuration fonctionne
+
+Dans une console Bash sur PythonAnywhere :
+
+```bash
+python manage.py shell
+```
+
+Puis :
+
+```python
+from django.conf import settings
+print(settings.EMAIL_HOST_USER)
+print(settings.EMAIL_HOST_PASSWORD is not None)
+```
+
+Vous devez obtenir :
+
+```
+ton_email@gmail.com
+True
+```
+
+Votre formulaire **Contact** peut maintenant envoyer des emails en production, exactement comme en local.
 
 # 6. Créer la base de données de production
 
