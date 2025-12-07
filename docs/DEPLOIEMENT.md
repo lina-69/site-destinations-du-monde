@@ -141,6 +141,7 @@ Si votre page **Contact** envoie un email en local, vous devez reproduire la con
 
 Pour cela, deux étapes sont nécessaires et complémentaires :
 ➡️ **Étape 1 : configurer `production.py`**
+
 ➡️ **Étape 2 : définir les variables d’environnement sur PythonAnywhere**
 
 
@@ -177,6 +178,7 @@ EMAIL_HOST_PASSWORD=TON_MDP_APPLICATION_GMAIL
 ```
 
 ➡️ Remplacez par votre adresse Gmail et *votre mot de passe d’application Gmail*.
+
 ➡️ Ne jamais mettre d’espaces avant ou après le `=`.
 
 3. Enregistrer puis cliquer sur **Reload** de la Web App.
@@ -187,7 +189,7 @@ EMAIL_HOST_PASSWORD=TON_MDP_APPLICATION_GMAIL
 
 Ce n’est pas votre mot de passe habituel.
 Il faut le créer dans :
-**Google → Sécurité → Mots de passe d’application**
+**Gérer votre compte Google → Sécurité → Mots de passe d’application**
 
 #### 2️⃣ Ne jamais écrire un mot de passe directement dans le code
 
