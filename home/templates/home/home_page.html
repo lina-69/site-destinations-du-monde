@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load wagtailimages_tags wagtailcore_tags %} {# images + richtext si besoin #}
 
-{% block title %}Accueil - Mon site vitrine{% endblock %}
+{% block title %}Accueil - Destinations du Monde{% endblock %}
 
 {% block content %}
 <style>
@@ -84,21 +84,21 @@
         background: rgba(17,24,39,0.85);
     }
 
-    /* Section services sur la page d'accueil */
-    .home-services {
+    /* Section destinations sur la page d'accueil */
+    .home-destinations {
         background: white;
         padding: 3rem 0;
     }
 
-    .services-grid {
+    .destinations-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
         gap: 1.5rem;
         margin-top: 2rem;
     }
 
-    /* Carte de service = lien cliquable avec image + overlay */
-    .service-card {
+    /* Carte de destination = lien cliquable avec image + overlay */
+    .destination-card {
         display: block;
         position: relative;
         border-radius: 1rem;
@@ -110,18 +110,18 @@
         transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
     }
 
-    .service-card:hover {
+    .destination-card:hover {
         transform: translateY(-4px);
         box-shadow: 0 14px 30px rgba(15, 23, 42, 0.25);
     }
 
-    .service-image-wrapper {
+    .destination-image-wrapper {
         position: relative;
         width: 100%;
         height: 100%;
     }
 
-    .service-image-wrapper img {
+    .destination-image-wrapper img {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -130,13 +130,13 @@
         transition: transform 0.4s ease, filter 0.2s ease;
     }
 
-    .service-card:hover .service-image-wrapper img {
+    .destination-card:hover .destination-image-wrapper img {
         transform: scale(1.05);
         filter: brightness(0.9);
     }
 
     /* Overlay avec dégradé + titre par-dessus l'image */
-    .service-overlay {
+    .destination-overlay {
         position: absolute;
         inset: 0;
         display: flex;
@@ -152,7 +152,7 @@
         color: white;
     }
 
-    .service-badge {
+    .destination-badge {
         font-size: 0.75rem;
         text-transform: uppercase;
         letter-spacing: 0.12em;
@@ -160,19 +160,19 @@
         margin-bottom: 0.25rem;
     }
 
-    .service-title {
+    .destination-title {
         font-size: 1.1rem;
         font-weight: 600;
         margin-bottom: 0.1rem;
     }
 
-    .service-subtext {
+    .destination-subtext {
         font-size: 0.8rem;
         color: #e5e7eb;
         opacity: 0.85;
     }
 
-    .service-placeholder {
+    .destination-placeholder {
         width: 100%;
         height: 100%;
         min-height: 220px;
@@ -214,11 +214,11 @@
             gap: 0.8rem;
         }
 
-        .services-grid {
+        .destinations-grid {
             grid-template-columns: 1fr;
         }
 
-        .home-services {
+        .home-destinations {
             padding: 2.5rem 0;
         }
     }
@@ -267,40 +267,39 @@
     </div>
 </section>
 
-<!-- Préview de nos services sur la page d'accueil -->
-<section class="home-services">
+<!-- Préview de nos destinations sur la page d'accueil -->
+<section class="home-destinations">
     <div class="container">
         <h2 class="section-title">
-            {{ page.services_preview_title|default:"Nos services" }}
+            {{ page.destinations_preview_title|default:"Nos destinations" }}
         </h2>
         <p class="section-subtitle">
-            {{ page.services_preview_intro|default:"Découvrez en un coup d’œil les principaux services proposés." }}
+            {{ page.destinations_preview_intro|default:"Découvrez en un coup d’œil les principaux destinations proposés." }}
         </p>
 
-        {# On boucle sur le StreamField "services_preview" défini dans HomePage #}
-        {% if page.services_preview %}
-            <div class="services-grid">
-                {% for block in page.services_preview %}
-                    {% if block.block_type == "service" %}
-                        {% with service=block.value %}
-                            {# Toute la carte est cliquable et renvoie vers la page "Nos services" #}
-                            <a href="/nos-services/" class="service-card">
-                                <div class="service-image-wrapper">
-                                    {% if service.image %}
-                                        {# Image choisie dans Wagtail pour ce service #}
-                                        {% image service.image fill-600x350 %}
+        {# On boucle sur le StreamField "destinations_preview" défini dans HomePage #}
+        {% if page.destinations_preview %}
+            <div class="destinations-grid">
+                {% for block in page.destinations_preview %}
+                    {% if block.block_type == "destination" %}
+                        {% with destination=block.value %}
+                            {# Toute la carte est cliquable et renvoie vers la page "Nos destinations" #}
+                            <a href="/nos-destinations/" class="destination-card">
+                                <div class="destination-image-wrapper">
+                                    {% if destination.image %}
+                                        {# Image choisie dans Wagtail pour ce destination #}
+                                        {% image destination.image fill-600x350 %}
                                     {% else %}
                                         {# Si pas d'image : un joli dégradé en fond #}
-                                        <div class="service-placeholder"></div>
+                                        <div class="destination-placeholder"></div>
                                     {% endif %}
 
-                                    <div class="service-overlay">
-                                        {% if service.badge %}
-                                            <div class="service-badge">{{ service.badge }}</div>
+                                    <div class="destination-overlay">
+                                        {% if destination.badge %}
+                                            <div class="destination-badge">{{ destination.badge }}</div>
                                         {% endif %}
-                                        <h3 class="service-title">{{ service.title }}</h3>
-                                        <p class="service-subtext">
-                                            Voir ce service en détail →
+                                        <h3 class="destination-title">{{ destination.title }}</h3>
+                                        <p class="destination-subtext">
                                         </p>
                                     </div>
                                 </div>
@@ -311,13 +310,36 @@
             </div>
         {% else %}
             <p style="margin-top:1.5rem; color:#6b7280; font-size:0.9rem;">
-                Aucun service n’est encore configuré. Vous pouvez ajouter vos services depuis l’admin Wagtail.
             </p>
         {% endif %}
 
-        <!-- Petit rappel vers la page contact -->
+<section class="home-info-categories">
+    <div class="container">
+        <h2 class="section-title">Ce que vous trouverez</h2>
+
+        {% if page.info_categories %}
+            <div class="info-grid">
+                {% for block in page.info_categories %}
+                    {% if block.block_type == "info_category" %}
+                        <div class="info-card">
+                            <span class="icon {{ block.value.icon }}"></span>
+                            <h3 class="info-title">{{ block.value.title }}</h3>
+                            <p class="info-description">{{ block.value.description }}</p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p style="margin-top:1.5rem; color:#6b7280; font-size:0.9rem;">
+                Aucune information ajoutée pour l’instant.
+            </p>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Petit rappel vers la page contact -->
         <div class="home-contact-cta">
-            <p>Vous avez un projet en tête ?</p>
+            <p>Besoin d'un guide?</p>
             <a href="/contact/" class="btn-primary">Nous contacter</a>
         </div>
     </div>

@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags %}
+
+{% block title %}Destinations du Monde - Destinations{% endblock %}
+
+{% block content %}
+<style>
+    /* =======================
+       Styles page "Nos destinations"
+       ======================= */
+
+    .destinations-section {
+        padding: 3rem 0;
+    }
+
+    .destinations-list-grid {
+        margin-top: 2rem;
+        display: grid;
+        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .destination-card-full {
+        display: inline-block;   /* chaque bloc reste isolé */
+        vertical-align: top;     /* aligne les blocs proprement */
+        background: white;
+        border-radius: 1rem;
+        padding: 0.8rem; /* réduit l’espace interne */
+        border: 1px solid #e5e7eb;
+        max-width: 300px; /* largeur maximale d'une carte */
+        margin: 1rem;   /* centre la carte dans sa colonne */
+    }
+
+    .destination-card-full a.learn-more-btn {
+        display: block;   /* force le bouton à occuper toute la largeur */
+        margin-top: 1rem; /* espace au-dessus du bouton */
+    }
+
+    .destination-card-full img {
+        width: 100%;
+        height: 200px;       /* fixe une hauteur */
+        object-fit: cover;   /* remplit le bloc */
+        object-position: center top; /* ajuste le cadrage (ex: haut, centre, bas) */
+    }
+
+    .destination-card-full h2 {
+        font-size: 1rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .destination-card-full p {
+        font-size: 0.85rem;
+        color: #4b5563;
+        margin-bottom: 0.4rem;
+        line-height: 1.3;
+    }
+
+    .destination-features {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-left: 1.1rem;
+    }
+
+    .destination-badge-full {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: #2563eb;
+        margin-bottom: 0.35rem;
+    }
+
+    /* =======================
+       Filtres
+       ======================= */
+
+    .destination-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 1.2rem;
+      background: #f3f4f6;
+      border-radius: 1.2rem;
+      margin: 2rem 0;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    .destination-filters button {
+      background: linear-gradient(135deg, #ead285, #2563eb);
+      color: #fff;
+      border: none;
+      padding: 0.7rem 1.4rem;
+      border-radius: 999px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .destination-filters button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .destination-filters button.active {
+      background: #10b981;
+    }
+
+
+    /* =======================
+    boutons "En savoir plus"
+       ===================== */
+    .learn-more-btn {
+        display: inline-block;
+        margin-top: 0.5rem;
+        background: #2563eb;
+        color: #fff;
+        padding: 0.4rem 0.9rem;
+        border-radius: 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .learn-more-btn:hover {
+        background: #1e40af;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+
+    /* =======================
+    Continents s'affichant à droite 
+       ===================== */
+       .destination-continent-label {
+        display: inline-block;
+        background-color: #f4f2f2;   /* orange vif */
+        text-transform: uppercase;   /* met tout en majuscules */
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #060000;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.4rem;
+        text-align: right;
+        margin: 0.3rem 0;
+        letter-spacing: 1px;         /* espace entre les lettres */
+    }
+
+.continent-filters {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.continent-filters button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #2563eb, #7c3aed); /* bleu → violet */
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.continent-filters button:hover {
+  background: linear-gradient(135deg, #1e40af, #5b21b6); /* plus foncé au survol */
+  transform: scale(1.05);
+}
+
+.continent-filters button.active {
+  background: linear-gradient(135deg, #0ea5e9, #06b6d4); /* bleu clair → turquoise pour actif */
+  color: #fff;
+  font-weight: 700;              /* texte plus marqué */
+  box-shadow: 0 0 10px rgba(0,0,0,0.2); /* petite ombre pour le relief */
+  transform: scale(1.05);        /* léger zoom pour le distinguer */
+}
+
+
+
+
+
+
+    /* =======================
+       Version mobile
+       ======================= */
+
+    @media (max-width: 768px) {
+        .destinations-section {
+            padding: 2.5rem 0;
+        }
+
+        .destinations-list-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem; /* réduit l’espace entre les cartes */
+        }
+    }
+</style>
+
+<section class="destinations-section">
+    <div class="container">
+        <!-- Titre et sous-titre venant du modèle -->
+        <h1 class="section-title">
+            {{ page.intro_title|default:"Nos destinations" }}
+        </h1>
+        <p class="section-subtitle">
+            {{ page.intro_subtitle|default:"Retrouvez ici la liste complète des destinations proposés." }}
+        </p>
+
+       <!-- Boutons de filtre -->
+    <div class="continent-filters">
+        <button data-filter="tous" class="active">Tous</button>
+        <button data-filter="europe">Europe</button>
+        <button data-filter="asie">Asie</button>
+        <button data-filter="amerique">Amérique</button>
+        <button data-filter="afrique">Afrique</button>
+        <button data-filter="oceanie">Océanie</button>
+    </div>
+
+        <div class="destinations-list-grid">
+            {% if page.destinations %}
+                {% for block in page.destinations %}
+                    {% if block.block_type == "destination" %}
+                        {% with destination=block.value %}
+
+                        
+
+                            <article class="destination-card-full" data-continent="{{ destination.continent|lower }}">
+                                <div class="destination-continent-label">
+                                    {{ destination.continent }}
+                                </div>
+
+                                
+                            
+
+                                {% if destination.image %}
+                                    <div style="border-radius:0.9rem; overflow:hidden; margin-bottom:0.5rem;">
+                                        {% image destination.image fill-600x350 %}
+                                    </div>
+                                {% endif %}
+
+                                
+                                {% if destination.badge %}
+                                    <div class="destination-badge-full">
+                                        {{ destination.badge }}
+                                    </div>
+                                {% endif %}
+
+                                <h2>
+                                    {{ destination.title }}
+                                </h2>
+
+
+                                    <p>
+                                        {{ destination.description }}
+                                    </p>
+
+                                {% if destination.features %}
+                                    <ul class="destination-features">
+                                        {% for feature in destination.features %}
+                                            <li>{{ feature }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+
+                                
+
+
+
+
+                                    
+
+                            </article>
+
+                        {% endwith %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p style="color:#6b7280; font-size:0.95rem; margin-top:1.5rem;">
+                </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

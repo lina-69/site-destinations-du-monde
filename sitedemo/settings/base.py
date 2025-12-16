@@ -136,7 +136,7 @@ STATICFILES_DIRS = [
     PROJECT_DIR / "static",
 ]
 
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = PROJECT_DIR / "static_collected"
 STATIC_URL = "/static/"
 
 MEDIA_ROOT = BASE_DIR / "media"

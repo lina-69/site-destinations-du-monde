@@ -6,12 +6,12 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail import blocks
 from wagtail.admin.panels import (
     FieldPanel,
-    MultiFieldPanel,
+    MultiFieldPanel, 
     PageChooserPanel,
     InlinePanel,
 )
 from wagtail.images.models import Image
-from wagtail.images.blocks import ImageChooserBlock   # ✅ pour l'image dans chaque service
+from wagtail.images.blocks import ImageChooserBlock   # ✅ pour l'image dans chaque destination
 
 # Pour la page contact avec formulaire email
 from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField
@@ -19,19 +19,21 @@ from wagtail.contrib.forms.panels import FormSubmissionsPanel
 from modelcluster.fields import ParentalKey
 
 # ============================================================
-# 1) Bloc réutilisable pour décrire un service
+# 1) Bloc réutilisable pour décrire un destination
 #    -> utilisé sur la page d'accueil (aperçu)
-#    -> utilisé sur la page "Nos services" (liste complète)
-#    Chaque service a maintenant :
+#    -> utilisé sur la page "Nos destinations" (liste complète)
+#    Chaque destination a maintenant :
 #      - un badge/numéro
 #      - un titre
 #      - une description
 #      - une liste de points clés
 #      - UNE IMAGE
 # ============================================================
-class ServiceBlock(blocks.StructBlock):
+class destinationBlock(blocks.StructBlock):
+    
+
     """
-    Bloc "Service" pour StreamField.
+    Bloc "destination" pour StreamField.
     On pourra en ajouter plusieurs dans l'admin Wagtail.
     """
 
@@ -44,7 +46,7 @@ class ServiceBlock(blocks.StructBlock):
     title = blocks.CharBlock(
         required=True,
         max_length=120,
-        label="Titre du service"
+        label="Titre du destination"
     )
 
     description = blocks.TextBlock(
@@ -52,11 +54,11 @@ class ServiceBlock(blocks.StructBlock):
         label="Description courte"
     )
 
-    # ✅ Nouvelle image pour chaque service (illustration moderne)
+    # ✅ Nouvelle image pour chaque destination (illustration moderne)
     image = ImageChooserBlock(
         required=False,
-        help_text="Image ou icône illustrant le service (format horizontal de préférence).",
-        label="Image du service"
+        help_text="Image ou icône illustrant le destination (format horizontal de préférence).",
+        label="Image du destination"
     )
 
     features = blocks.ListBlock(
@@ -65,16 +67,71 @@ class ServiceBlock(blocks.StructBlock):
         label="Liste de points clés (bullet points)"
     )
 
+    # ✅ Nouveau champ continent
+    continent = blocks.ChoiceBlock(
+        choices=[
+            ('europe', 'Europe'),
+            ('asie', 'Asie'),
+            ('amerique', 'Amérique'),
+            ('afrique', 'Afrique'),
+            ('oceanie', 'Océanie'),
+        ],
+        required=True,
+        label="Continent",
+        help_text="Choisir le continent de la destination"
+    )
+     # ✅ Champ pour relier à une page de détail
+    page_link = blocks.PageChooserBlock(
+        required=False,
+        label="Page détaillée liée",
+        help_text="Choisir la page DestinationDetailPage correspondante"
+    )
+    
+
     class Meta:
         icon = "cog"
-        label = "Service"
-        help_text = "Bloc réutilisable pour présenter un service avec une image."
+        label = "destination"
+        help_text = "Bloc réutilisable pour présenter un destination avec une image."
+
+continent = blocks.CharBlock(
+    required=True,
+    help_text="Nom du continent (ex : Europe, Asie, Afrique...)",
+    label="Continent"
+)
+
+class DestinationDetailPageBlock(blocks.StructBlock):
+    titre = blocks.CharBlock(required=True)
+    sous_titre = blocks.CharBlock(required=False)
+    image = ImageChooserBlock(required=False)
+    description = blocks.RichTextBlock(required=False)
+    
+    
+    class Meta:
+        icon = "doc-full"
+        label = "Destination"
+
+
+class InfoCategoryBlock(blocks.StructBlock):
+    title = blocks.CharBlock(required=True, help_text="Titre de la catégorie")
+    description = blocks.TextBlock(required=True, help_text="Description")
+    icon = blocks.ChoiceBlock(choices=[
+        ('location', 'Lieux emblématiques'),
+        ('culture', 'Histoire et culture'),
+        ('leaf', 'Conseils pratiques'),
+        ('star', 'Faits intéressants'),
+    ], help_text="Icône associée")
+    image = ImageChooserBlock(required=False, help_text="Image optionnelle")
+
+    class Meta:
+        icon = "list-ul"
+        label = "Catégorie d'information"
+
 
 
 # ============================================================
 # 2) Page d'accueil
 #    - hero (image + texte + boutons)
-#    - aperçu de 2–3 services
+#    - aperçu de 2–3 destinations
 # ============================================================
 class HomePage(Page):
     # --------- HERO (bandeau principal avec image) ----------
@@ -144,29 +201,29 @@ class HomePage(Page):
         help_text="Page vers laquelle le bouton secondaire redirige (ex : Contact).",
     )
 
-    # --------- SECTION "APERÇU DES SERVICES" ----------
-    services_preview_title = models.CharField(
-        "Titre de la section services (accueil)",
+    # --------- SECTION "APERÇU DES destinations" ----------
+    destinations_preview_title = models.CharField(
+        "Titre de la section destinations (accueil)",
         max_length=150,
-        default="Nos services",
+        default="Nos destinations",
     )
 
-    services_preview_intro = models.TextField(
-        "Texte d’intro de la section services (accueil)",
+    destinations_preview_intro = models.TextField(
+        "Texte d’intro de la section destinations (accueil)",
         blank=True,
-        default="Un aperçu rapide de nos services.",  # ✅ default
-        help_text="Petite phrase pour introduire les services."
+        default="Un aperçu rapide de nos destinations.",  # ✅ default
+        help_text="Petite phrase pour introduire les destinations."
     )
 
-    # StreamField utilisant notre bloc ServiceBlock (avec image)
-    services_preview = StreamField(
+    # StreamField utilisant notre bloc destinationBlock (avec image)
+    destinations_preview = StreamField(
         [
-            ("service", ServiceBlock()),
+            ("destination", destinationBlock()),
         ],
         blank=True,
         use_json_field=True,
-        verbose_name="Services à afficher sur l’accueil (aperçu)",
-        #help_text="Liste de 2–3 services pour la page d’accueil.",
+        verbose_name="destinations à afficher sur l’accueil (aperçu)",
+        #help_text="Liste de 2–3 destinations pour la page d’accueil.",
     )
 
     # --------- PANELS POUR L'ADMIN WAGTAIL ----------
@@ -186,50 +243,115 @@ class HomePage(Page):
         ),
         MultiFieldPanel(
             [
-                FieldPanel("services_preview_title"),
-                FieldPanel("services_preview_intro"),
-                FieldPanel("services_preview"),
+                FieldPanel("destinations_preview_title"),
+                FieldPanel("destinations_preview_intro"),
+                FieldPanel("destinations_preview"),
             ],
-            heading="Aperçu des services sur la page d’accueil",
+            heading="Aperçu des destinations sur la page d’accueil",
         ),
+
+                MultiFieldPanel(
+            [
+                FieldPanel("info_categories"),
+            ],
+            heading="Section 'Ce que vous trouverez'",
+        ),
+
     ]
 
 
+# --------- SECTION "Ce que vous trouverez" ----------
+    info_categories = StreamField(
+        [
+            ("info_category", InfoCategoryBlock()),
+        ],
+        blank=True,
+        use_json_field=True,
+        verbose_name="Bloc 'Ce que vous trouverez'",
+    )
+
+
 # ============================================================
-# 3) Page "Nos services"
-#    - même bloc ServiceBlock, mais pour la liste complète
+# 3) Page "Nos destinations"
+#    - même bloc destinationBlock, mais pour la liste complète
 # ============================================================
-class ServicesPage(Page):
+class destinationsPage(Page):
     intro_title = models.CharField(
         "Titre principal",
         max_length=150,
-        default="Nos services",
+        default="Nos destinations",
     )
 
     intro_subtitle = models.TextField(
         "Texte d’intro",
         blank=True,
-        default="Voici un exemple de section services que vous pouvez adapter.",  # ✅ default
-        help_text="Ex : 'Voici un exemple de section services...'"
+        default="Voici un exemple de section destinations que vous pouvez adapter.",  # ✅ default
+        help_text="Ex : 'Voici un exemple de section destinations...'"
     )
 
-    # On réutilise le même bloc ServiceBlock avec image
-    services = StreamField(
+    # On réutilise le même bloc destinationBlock avec image
+    destinations = StreamField(
         [
-            ("service", ServiceBlock()),
+            ("destination", destinationBlock()),
         ],
         blank=True,
         use_json_field=True,
-        verbose_name="Services",
-        help_text="Liste complète des services proposés.",
+        verbose_name="destinations",
+        help_text="Liste complète des destinations proposés.",
     )
 
     content_panels = Page.content_panels + [
         FieldPanel("intro_title"),
         FieldPanel("intro_subtitle"),
-        FieldPanel("services"),
+        FieldPanel("destinations"),
     ]
 
+class DestinationDetailPage(Page):
+    template = "home/destination_detail_page.html"# chemin simple (tu peux le changer)
+
+    sous_titre = models.CharField(
+        max_length=250,
+        blank=True,
+        verbose_name="Sous-titre"
+    )
+    description = RichTextField(
+        blank=True,
+        verbose_name="Description"
+    )
+    image = models.ForeignKey(
+        'wagtailimages.Image',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
+        verbose_name="Image"
+    )
+
+# ✅ Ajout d’un champ StreamField
+    contenu = StreamField(
+        [
+            ("paragraphe", blocks.RichTextBlock()),
+            ("image", ImageChooserBlock()),
+            ("citation", blocks.BlockQuoteBlock()),
+        ],
+        use_json_field=True,  # obligatoire en Wagtail 3+
+        blank=True,
+        verbose_name="Blocs de contenu",
+    )
+    
+
+    content_panels = Page.content_panels + [
+        FieldPanel('sous_titre'),
+        FieldPanel('description'),
+        FieldPanel('image'),
+        FieldPanel("contenu"),  # c’est ça qui crée la section “Blocs” dans l’admin
+        
+        
+    ]
+
+    # Optionnel : tu peux limiter où ces pages apparaissent
+    # parent_page_types = ['tonapp.DestinationsPage']
+    # subpage_types = []
 
 # ============================================================
 # 4) Page "À propos"
@@ -318,7 +440,7 @@ class ContactPage(AbstractEmailForm):
     contact_email = models.EmailField(
         "Email de contact",
         blank=True,
-        default="contact@exemple.com",  # ✅ default simple
+        default="contact@exemple.com",  # ✅ vide par défaut
     )
 
     contact_phone = models.CharField(
@@ -332,7 +454,7 @@ class ContactPage(AbstractEmailForm):
         "Adresse",
         max_length=255,
         blank=True,
-        default="Adresse de votre entreprise",  # ✅ default pédagogique
+        default="",  # ✅ vide par défaut 
     )
 
     contact_text = RichTextField(

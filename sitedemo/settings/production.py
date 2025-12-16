@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
 # ManifestStaticFilesStorage is recommended in production, to prevent
 # outdated JavaScript / CSS assets being served from cache
@@ -12,3 +12,5 @@ try:
     from .local import *
 except ImportError:
     pass
+
+

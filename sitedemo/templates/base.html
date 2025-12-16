@@ -3,8 +3,12 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Mon site vitrine{% endblock %}</title>
+    <title>{% block title %}Destinations du Monde{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+
+      <!-- Font Awesome CDN -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     {# Ici on peut charger un fichier CSS dans /static/ plus tard si on veut #}
     {# <link rel="stylesheet" href="{% static 'css/style.css' %}"> #}
@@ -19,10 +23,14 @@
         }
 
         body {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: 'Source Sans Pro', sans-serif;
             color: #1f2933;
             background-color: #f5f7fa;
             line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
         }
 
         a {
@@ -32,12 +40,10 @@
 
         /* Layout */
         header {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+        background: linear-gradient(to right, #0D9488, #3B82F6);
+        color: white;
         }
+
 
         .container {
             max-width: 1100px;
@@ -73,23 +79,17 @@
         }
 
         .btn-primary {
-            display: inline-block;
-            padding: 0.75rem 1.4rem;
-            border-radius: 999px;
-            background: linear-gradient(135deg, #2563eb, #4f46e5);
-            color: white;
-            font-weight: 500;
-            font-size: 0.95rem;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-            box-shadow: 0 10px 18px rgba(37, 99, 235, 0.25);
-        }
+        background-color: #2DD4BF	; /* Bleu océan */
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+    }
 
         .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 14px 24px rgba(37, 99, 235, 0.35);
-        }
+         background-color: #1aa794; /* Bleu un peu plus foncé au survol */
+    }
 
         main {
             min-height: 70vh;
@@ -134,7 +134,8 @@
             color: #ffffff;
         }
 
-        .social-icons {
+        
+         .social-icons {
             display: flex;
             gap: 0.75rem;
             margin-top: 0.5rem;
@@ -144,17 +145,17 @@
             width: 34px;
             height: 34px;
             border-radius: 999px;
-            border: 1px solid #4b5563;
+            border: 1px solid #f0d18f8f;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             font-size: 0.9rem;
-            color: #e5e7eb;
+            color: #050f25;
         }
 
         .social-icon:hover {
-            background: #e5e7eb;
-            color: #111827;
+            background: #e5e7eb5e;
+            color: #f0d18f;
         }
 
         .footer-bottom {
@@ -178,6 +179,180 @@
             font-size: 0.95rem;
             color: #6b7280;
         }
+        
+.hero-banner {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  overflow: hidden;
+}
+
+.hero-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.6);
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 370px 60px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.hero-back {
+  font-size: 1rem;
+  text-decoration: none;
+  color: white;
+  
+}
+
+.hero-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.hero-subtitle {
+  font-size: 1.4rem;
+  font-style: italic;
+  opacity: 0.9;
+  margin: 0;
+}
+
+
+.page-description,
+.page-info,
+.page-highlights,
+.page-gallery {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 0 20px;
+  line-height: 1.6;
+}
+
+.page-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.gallery-img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+
+
+.cards-container {
+  display: flex;
+  flex-direction: column;   /* empile les cartes */
+  align-items: flex-start;  /* aligne à gauche */
+  gap: 30px;                /* espace entre les cartes */
+  width: 100%;
+  margin: 60px 0;           /* marge haut/bas */
+  padding-left: 60px;       /* marge intérieure à gauche (augmente l'espace) */
+}
+
+.card {
+  width: 70%;               /* largeur des cartes */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.card-text {
+  padding: 20px;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.card-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.card-quote {
+  padding: 20px;
+  font-style: italic;
+  background: #f9f9f9;
+  border-left: 4px solid #0077cc;
+}
+
+
+
+
+/* Premier bloc : pleine largeur avec marge uniforme */
+.bloc-intro {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 60px;          /* marge gauche/droite */
+  font-size: 1.3rem;
+  line-height: 1.8;
+  background: #f5f5f5;
+  border-left: 6px solid #0077cc;
+  border-radius: 8px;
+}
+
+/* Conteneur des autres blocs */
+.contenu-kyoto {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin: 60px 0;
+}
+
+/* Autres blocs : cartes plus étroites, alignées à gauche */
+.card {
+  width: 70%;               /* largeur réduite */
+  margin-left: 60px;        /* retrait à gauche */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.card-text {
+  padding: 20px;
+}
+
+.card-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.card-quote {
+  padding: 20px;
+  font-style: italic;
+  background: #f9f9f9;
+  border-left: 4px solid #44a9f2;
+}
+
+
+
+
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -195,6 +370,8 @@
                 flex-direction: column;
             }
         }
+
+        
     </style>
 </head>
 <body>
@@ -204,12 +381,12 @@
         <nav class="nav">
             <div class="logo">
                 <!-- Logo / Nom du site -->
-                MonSite<span style="color:#3b82f6;">Pro</span>
+                <span style="color:#0F766E; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);">Destinations du Monde</span>
             </div>
             <div class="nav-links">
                 <!-- Rappel navigation header (liens vers les pages principales) -->
                 <a href="/">Accueil</a>
-                <a href="/nos-services/">Nos services</a>
+                <a href="/destinations/">Destinations</a>
                 <a href="/a-propos/">À propos</a>
                 <a href="/contact/">Contact</a>
             </div>
@@ -227,9 +404,9 @@
     <div class="container">
         <div class="footer-top">
             <div class="footer-column">
-                <h4>MonSitePro</h4>
+                <h4>Destinations du Monde</h4>
                 <p style="font-size:0.9rem; color:#9ca3af;">
-                    Un exemple de site vitrine moderne avec Wagtail.
+                Partagez votre passion pour le voyage et explorez les merveilles du monde entier.
                 </p>
             </div>
 
@@ -238,29 +415,69 @@
                 <ul class="footer-links">
                     <!-- Rappel navigation dans le footer -->
                     <li><a href="/">Accueil</a></li>
-                    <li><a href="/nos-services/">Nos services</a></li>
+                    <li><a href="/nos-destinations/">Destinations</a></li>
                     <li><a href="/a-propos/">À propos</a></li>
                     <li><a href="/contact/">Contact</a></li>
                 </ul>
             </div>
 
-            <div class="footer-column">
-                <h4>Suivez-nous</h4>
-                <p style="font-size:0.9rem; color:#9ca3af;">Retrouvez-nous sur les réseaux sociaux :</p>
-                <div class="social-icons">
-                    <!-- Icônes sociales simples (texte pour l'exemple) -->
-                    <a href="#" class="social-icon" aria-label="Facebook">F</a>
-                    <a href="#" class="social-icon" aria-label="LinkedIn">in</a>
-                    <a href="#" class="social-icon" aria-label="Instagram">IG</a>
-                </div>
-            </div>
+
+            <style>
+             footer {
+            background-color: #0F766E;
+            color: white;
+        }
+            </style>
+            </head>
+
+        
+          <div class="footer-column">
+              <h4>Suivez-nous</h4>
+              <p style="font-size:0.9rem; color:#9ca3af67;">Retrouvez-nous sur les réseaux sociaux :</p>
+              <div class="social-icons">
+                  <a href="https://www.facebook.com/destinations-du-monde" target="_blank" aria-label="Facebook" class="social-icon">
+                      <i class="fa-brands fa-facebook-f"></i>
+                  </a>
+                  <a href="https://www.linkedin.com/company/destinations-du-monde" target="_blank" aria-label="LinkedIn" class="social-icon">
+                      <i class="fa-brands fa-linkedin-in"></i>
+                  </a>
+                  <a href="https://www.instagram.com/destinations-du-monde" target="_blank" aria-label="Instagram" class="social-icon">
+                      <i class="fa-brands fa-instagram"></i>
+                  </a>
+              </div>
+          </div>
+
         </div>
 
-        <div class="footer-bottom">
-            &copy; {% now "Y" %} MonSitePro · Tous droits réservés.
+        <div class="footer-bottom" style="color:#f1f1f1;">
+            &copy; {% now "Y" %} Destinations du Monde · Tous droits réservés.
         </div>
     </div>
 </footer>
+
+<!-- ton script de filtrage -->
+<script>
+  const buttons = document.querySelectorAll('[data-filter]');
+  const cards = document.querySelectorAll('[data-continent]');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      const filter = button.getAttribute('data-filter');
+
+      buttons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      cards.forEach(card => {
+        const continent = card.getAttribute('data-continent');
+        if (filter === 'tous' || filter === continent) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
 
 </body>
 </html>

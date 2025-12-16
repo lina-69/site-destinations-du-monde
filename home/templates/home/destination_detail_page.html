@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load wagtailimages_tags wagtailcore_tags %}
+
+{% block content %}
+<section class="hero-banner">
+  {% if page.image %}
+    <div class="hero-background">
+      {% image page.image fill-1600x800 class="hero-img" %}
+    </div>
+  {% endif %}
+
+  <div class="hero-overlay">
+    <a href="{{ page.get_parent.url }}" class="hero-back">← Retour aux destinations</a>
+    <h1 class="hero-title">{{ page.title }}</h1>
+    {% if page.sous_titre %}
+      <p class="hero-subtitle">📍 {{ page.sous_titre }}</p>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Description simple -->
+<section class="page-description">
+  {{ page.description|richtext }}
+</section>
+
+
+<!-- Blocs de contenu affichés comme cartes -->
+{% if page.contenu %}
+<section class="contenu-kyoto">
+  {% for block in page.contenu %}
+    {% if forloop.first and block.block_type == "paragraphe" %}
+      <div class="bloc-intro">
+        {{ block.value|richtext }}
+      </div>
+    {% else %}
+      <div class="card">
+        {% if block.block_type == "paragraphe" %}
+          <div class="card-text">{{ block.value|richtext }}</div>
+        {% elif block.block_type == "image" %}
+          <div class="card-image">{% image block.value fill-600x400 class="card-img" %}</div>
+        {% elif block.block_type == "citation" %}
+          <blockquote class="card-quote">{{ block.value }}</blockquote>
+        {% endif %}
+      </div>
+
+      
+    {% endif %}
+  {% endfor %}
+</section>
+{% endif %}
+
+{% endblock %}
